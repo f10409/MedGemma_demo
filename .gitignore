@@ -1,0 +1,20 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+.ipynb_checkpoints/
+key.txt
+.python-version
+other/
+keys.py
+lightning_logs/
+notebook_figs/.ipynb_checkpoints/
+utils/
+datathon25_cxr_samples.csv
