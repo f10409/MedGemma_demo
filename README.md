@@ -1,7 +1,7 @@
 # MedGemma Demo
 Chest X-ray visual question answering (VQA) and classification, radiology report generation, and anatomy localization with MedGemma 1.5 (`google/medgemma-1.5-4b-it`).
 
-**Frank Li** | HITI Lab, Emory University | Datathon
+**Frank Li, Judy Gichoya, Mohammadreza Chavoshi** | HITI Lab, Emory University | RSNA 2026 Deep Learning Lab
 
 ## Notebooks
 | Notebook | What it does | Colab |
