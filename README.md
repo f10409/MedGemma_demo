@@ -1,5 +1,5 @@
 # MedGemma Demo
-Zero-shot chest X-ray classification, radiology report generation, and anatomy localization with MedGemma 1.5 (`google/medgemma-1.5-4b-it`).
+Chest X-ray visual question answering (VQA) and classification, radiology report generation, and anatomy localization with MedGemma 1.5 (`google/medgemma-1.5-4b-it`).
 
 **Frank Li** | HITI Lab, Emory University | Datathon
 
@@ -7,7 +7,7 @@ Zero-shot chest X-ray classification, radiology report generation, and anatomy l
 | Notebook | What it does | Colab |
 |---|---|---|
 | `0_hugging_face.ipynb` | Hugging Face login and MedGemma 1.5 access check | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/f10409/MedGemma_demo/blob/main/0_hugging_face.ipynb) |
-| `1_medgemma_demo.ipynb` | Zero-shot classification, report generation, anatomy localization | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/f10409/MedGemma_demo/blob/main/1_medgemma_demo.ipynb) |
+| `1_medgemma_demo.ipynb` | VQA and classification, report generation, anatomy localization | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/f10409/MedGemma_demo/blob/main/1_medgemma_demo.ipynb) |
 
 ## Usage (Google Colab)
 1. Open `0_hugging_face.ipynb` in Colab. Accept the MedGemma 1.5 terms and save your token as the `HF_TOKEN` secret.
