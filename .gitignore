@@ -16,4 +16,6 @@ other/
 keys.py
 lightning_logs/
 notebook_figs/.ipynb_checkpoints/
-datathon25_cxr_samples.csv
+
+# Downloaded datasets
+data/

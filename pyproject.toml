@@ -19,9 +19,12 @@ dependencies = [
     "scikit-learn>=1.7.1",
     "sentencepiece>=0.2.0",
     "torch>=2.7.1",
-    "transformers>=4.54.0",
+    "transformers>=4.56.0",
+    "radharmony",
+    "seaborn>=0.13.2",
     "wandb>=0.21.0",
 ]
 
 [tool.uv.sources]
 dlutils = { git = "https://github.com/theodapamede/DLUtils.git" }
+radharmony = { git = "https://github.com/f10409/RadHarmony.git" }

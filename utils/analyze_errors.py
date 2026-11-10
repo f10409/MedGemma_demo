@@ -82,7 +82,10 @@ def analyze_errors(predictions, references, all_outputs=None, meta=None, max_inv
         print("\n⚠️ Examples of invalid predictions:")
         for idx in invalid_predictions[:max_invalid_examples]:
             true_class = references[idx]
-            raw_output = all_outputs[idx]["generated_text"] if all_outputs else "N/A"
+            out = all_outputs[idx] if all_outputs else None
+            if isinstance(out, list):  # A batch pipeline call gives one list per prompt
+                out = out[0]
+            raw_output = out["generated_text"] if out else "N/A"
             print(f"  True: {true_class}")
             print(f"  Raw output: '{raw_output}'")
     
@@ -90,9 +93,9 @@ def analyze_errors(predictions, references, all_outputs=None, meta=None, max_inv
     prediction_df = pd.DataFrame({'predictions': predictions, 'references': references})
     
     # Recall: For each true class, what fraction was correctly predicted
-    subgroup_recall = prediction_df.groupby('references').apply(
-        lambda x: (x['predictions'] == x['references']).sum() / len(x)
-    )
+    # Compare in plain Python: pandas 3 cannot compare a mixed column (str and -1) with a str column.
+    is_correct = pd.Series([p == r for p, r in zip(predictions, references)])
+    subgroup_recall = is_correct.groupby(prediction_df['references']).mean()
     
     print("\n📊 Subgroup Recall:")
     print("=" * 30)
