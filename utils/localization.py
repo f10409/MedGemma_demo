@@ -84,6 +84,31 @@ def parse_boxes(response):
     return [b for b in boxes if _valid_box(b)]
 
 
+def boxes_on_image(image, boxes, size=512):
+    """
+    Draw bounding boxes on a copy of an image.
+
+    Args:
+        image: Square PIL Image (the image that the model saw).
+        boxes: List of dicts with "box_2d" ([y0, x0, y1, x1], 0-1000) and "label".
+        size: Output size in pixels.
+
+    Returns:
+        PIL Image: RGB image with the boxes.
+    """
+    canvas = image.convert("RGB").resize((size, size))
+    draw = ImageDraw.Draw(canvas)
+    colors = ["red", "lime", "cyan", "yellow", "magenta", "orange"]
+    for i, box in enumerate(boxes):
+        y0, x0, y1, x1 = [v / 1000 * size for v in box["box_2d"]]
+        y0, y1 = sorted((y0, y1))  # The model can give the corners in the wrong order
+        x0, x1 = sorted((x0, x1))
+        color = colors[i % len(colors)]
+        draw.rectangle([(x0, y0), (x1, y1)], outline=color, width=3)
+        draw.text((x0 + 3, y0 + 3), str(box.get("label", "")), fill=color)
+    return canvas
+
+
 def draw_boxes(image, boxes, size=512, figsize=(7, 7)):
     """
     Draw bounding boxes on an image and show it.
@@ -94,17 +119,7 @@ def draw_boxes(image, boxes, size=512, figsize=(7, 7)):
         size: Display size in pixels.
         figsize: Figure size as (width, height).
     """
-    canvas = image.resize((size, size))
-    draw = ImageDraw.Draw(canvas)
-    colors = ["red", "lime", "cyan", "yellow", "magenta", "orange"]
-    for i, box in enumerate(boxes):
-        y0, x0, y1, x1 = [v / 1000 * size for v in box["box_2d"]]
-        y0, y1 = sorted((y0, y1))  # The model can give the corners in the wrong order
-        x0, x1 = sorted((x0, x1))
-        color = colors[i % len(colors)]
-        draw.rectangle([(x0, y0), (x1, y1)], outline=color, width=3)
-        draw.text((x0 + 3, y0 + 3), str(box.get("label", "")), fill=color)
     plt.figure(figsize=figsize)
-    plt.imshow(canvas)
+    plt.imshow(boxes_on_image(image, boxes, size))
     plt.axis("off")
     plt.show()

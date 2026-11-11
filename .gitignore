@@ -19,3 +19,6 @@ notebook_figs/.ipynb_checkpoints/
 
 # Downloaded datasets
 data/
+
+# Local settings (for example the GPU)
+.env

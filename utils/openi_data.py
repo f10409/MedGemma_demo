@@ -2,6 +2,8 @@ import os
 import tarfile
 import urllib.request
 
+import pandas as pd
+
 OPENI_URL = "https://openi.nlm.nih.gov/imgs/collections"
 
 # RadHarmony label column -> class name used in the prompts
@@ -98,3 +100,25 @@ def sample_to_example(sample, label_cols):
         "Pathology": CLASS_NAMES[positive[0]],
         "Report": sample["report"],
     }
+
+
+def add_findings_and_indication(examples, samples, df, data_dir):
+    """
+    Add the findings and the indication from the harmonized table to each example.
+    The RadHarmony sample has the full report only. Changes the examples in place.
+
+    Args:
+        examples: Example dicts from sample_to_example.
+        samples: The RadHarmony samples, in the same order.
+        df: The harmonized DataFrame (with "image_path", "findings", "indication").
+        data_dir: The Open-i folder. "image_path" in df is relative to it.
+
+    Returns:
+        list: The examples, with "Findings" and "Indication" (None if missing).
+    """
+    info = df.set_index("image_path")[["findings", "indication"]]
+    for sample, example in zip(samples, examples):
+        row = info.loc[os.path.relpath(sample["img"], data_dir)]
+        example["Findings"] = row["findings"] if pd.notna(row["findings"]) else None
+        example["Indication"] = row["indication"] if pd.notna(row["indication"]) else None
+    return examples
