@@ -17,8 +17,9 @@ keys.py
 lightning_logs/
 notebook_figs/.ipynb_checkpoints/
 
-# Downloaded datasets
+# Downloaded datasets, and the saved embeddings and predictions
 data/
+cache/
 
 # Local settings (for example the GPU)
 .env

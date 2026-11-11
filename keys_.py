@@ -1,3 +1,0 @@
-HF_ACCESS_TOKEN = ""
-
-WANDB_API_KEY = ""
