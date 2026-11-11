@@ -1,8 +1,11 @@
 import gradio as gr
 
-from utils.localization import boxes_on_image, pad_to_square, remove_thinking
+from utils.localization import boxes_on_image, localization_prompt, pad_to_square, parse_boxes, remove_thinking
 from utils.preprocess import preprocess
 from utils.report import extract_findings
+
+# Same system prompt as Steps 6–8 in the notebook
+SYSTEM_MESSAGE = {"role": "system", "content": [{"type": "text", "text": "You are an expert radiologist."}]}
 
 # Empty VQA answer, generated findings, box image, and localization answer
 CLEARED = ("", "", None, "")
@@ -15,61 +18,58 @@ def app_image(image):
     return preprocess(image)
 
 
-def make_app(pipe, examples, system_message, localize, default_index=56):
+def make_app(pipe, examples, default_index=56):
     """
-    Build a Gradio app with an Open-i image list and 3 tabs: VQA, report generation, and localization.
+    Build a Gradio app with an Open-i image list and 3 tabs: VQA, report generation, and anatomy localization.
+    The app has its own prompts, so it needs only the pipeline and the samples.
 
     Args:
         pipe: The MedGemma pipeline.
         examples: List of sample dicts ("ImagePath", "Pathology", "Report", "Findings", "Indication").
-        system_message: System message for all prompts.
-        localize: Function (square image, body part) -> (boxes, answer).
         default_index: Sample that the app shows first.
 
     Returns:
         gr.Blocks: The app. Start it with demo.launch().
     """
 
-    def messages(image, text):
-        """Make the messages for one image and one prompt."""
-        return [
-            system_message,
+    def generate(model_image, text, max_new_tokens=300):
+        """Run the model on one image and one prompt. Return the generated text."""
+        messages = [
+            SYSTEM_MESSAGE,
             {
                 "role": "user",
                 "content": [
-                    {"type": "image", "image": app_image(image)},
+                    {"type": "image", "image": model_image},
                     {"type": "text", "text": text},
                 ],
             },
         ]
-
-    def generate(image, text):
-        """Run the model on one image and one prompt. Return the generated text."""
-        output = pipe(text=messages(image, text), max_new_tokens=300, return_full_text=False)
+        output = pipe(text=messages, max_new_tokens=max_new_tokens, return_full_text=False)
         return output[0]["generated_text"].strip()
 
     def app_vqa(image, question):
         """Answer a question about the image."""
         if image is None or not question.strip():
             return "Pick or upload an image. Then type a question."
-        return remove_thinking(generate(image, question))  # Some questions start a thinking trace
+        return remove_thinking(generate(app_image(image), question))  # Some questions start a thinking trace
 
     def app_report(image, indication):
-        """Write the findings, with the same prompt as the report section."""
+        """Write the findings, with the same prompt as Step 7 ("<INDICATION> findings:")."""
         if image is None:
             return "Pick or upload an image."
         indication = indication.strip()
         prompt = f"{indication} findings:" if indication else "findings:"
-        return extract_findings(generate(image, prompt))
+        return extract_findings(generate(app_image(image), prompt))
 
     def app_localize(image, object_name):
-        """Find one body part. Return the image with the box, and the answer."""
+        """Find one body part, with the same prompt as Step 8. Return the image with the box, and the answer."""
         if image is None or not object_name.strip():
             return None, "Pick or upload an image. Then type a body part."
         square = pad_to_square(app_image(image))
-        boxes, answer = localize(square, object_name)
-        boxes = [{"box_2d": b["box_2d"], "label": object_name} for b in boxes]
-        return boxes_on_image(square, boxes), answer
+        # The model writes about 500 tokens of thinking first, so allow more tokens
+        response = generate(square, localization_prompt(object_name), max_new_tokens=1000)
+        boxes = [{"box_2d": b["box_2d"], "label": object_name} for b in parse_boxes(response)]
+        return boxes_on_image(square, boxes), remove_thinking(response)
 
     def app_load_example(index):
         """Show one sample, its indication, true findings, and label. Clear old answers."""
