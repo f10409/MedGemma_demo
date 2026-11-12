@@ -104,7 +104,7 @@ def sample_to_example(sample, label_cols):
 
 def add_findings_and_indication(examples, samples, df, data_dir):
     """
-    Add the findings and the indication from the harmonized table to each example.
+    Add the findings, the impression, and the indication from the harmonized table to each example.
     The RadHarmony sample has the full report only. Changes the examples in place.
 
     Args:
@@ -114,11 +114,12 @@ def add_findings_and_indication(examples, samples, df, data_dir):
         data_dir: The Open-i folder. "image_path" in df is relative to it.
 
     Returns:
-        list: The examples, with "Findings" and "Indication" (None if missing).
+        list: The examples, with "Findings", "Indication", and "Impression" (None if missing).
     """
-    info = df.set_index("image_path")[["findings", "indication"]]
+    info = df.set_index("image_path")[["findings", "indication", "impression"]]
     for sample, example in zip(samples, examples):
         row = info.loc[os.path.relpath(sample["img"], data_dir)]
         example["Findings"] = row["findings"] if pd.notna(row["findings"]) else None
         example["Indication"] = row["indication"] if pd.notna(row["indication"]) else None
+        example["Impression"] = row["impression"] if pd.notna(row["impression"]) else None
     return examples

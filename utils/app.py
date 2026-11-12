@@ -18,6 +18,16 @@ def app_image(image):
     return preprocess(image)
 
 
+def format_report(example):
+    """Join the indication, findings, and impression of one sample into one report text. Skip missing parts."""
+    parts = [
+        ("INDICATION", example["Indication"]),
+        ("FINDINGS", example["Findings"]),
+        ("IMPRESSION", example["Impression"]),
+    ]
+    return "\n\n".join(f"{name}: {text}" for name, text in parts if text)
+
+
 def make_app(pipe, examples, default_index=56):
     """
     Build a Gradio app with an Open-i image list and 3 tabs: VQA, report generation, and anatomy localization.
@@ -25,7 +35,7 @@ def make_app(pipe, examples, default_index=56):
 
     Args:
         pipe: The MedGemma pipeline.
-        examples: List of sample dicts ("ImagePath", "Pathology", "Report", "Findings", "Indication").
+        examples: List of sample dicts ("ImagePath", "Pathology", "Findings", "Indication", "Impression").
         default_index: Sample that the app shows first.
 
     Returns:
@@ -72,15 +82,13 @@ def make_app(pipe, examples, default_index=56):
         return boxes_on_image(square, boxes), remove_thinking(response)
 
     def app_load_example(index):
-        """Show one sample, its indication, true findings, and label. Clear old answers."""
+        """Show one sample, its indication, radiologist report, and label. Clear old answers."""
         example = examples[index]
-        # Some reports have no findings section, so use the full report
-        true_findings = example["Findings"] or example["Report"]
         label = f"**Label:** {example['Pathology']}"
-        return example["ImagePath"], example["Indication"] or "", true_findings, label, *CLEARED
+        return example["ImagePath"], example["Indication"] or "", format_report(example), label, *CLEARED
 
     def app_upload():
-        """Clear the sample text and the old answers after you upload your own image."""
+        """Clear the sample text (indication, report, label) and the old answers after you upload your own image."""
         return "", "", "**Label:** none (your own image)", *CLEARED
 
     gr.close_all()  # Stop the old app if you build the app again
@@ -93,6 +101,7 @@ def make_app(pipe, examples, default_index=56):
                 image_choice = gr.Dropdown(image_choices, value=default_index, label="Open-i image")
                 image_label = gr.Markdown()
                 image = gr.Image(type="pil", image_mode=None, label="Chest X-ray (or upload your own)")
+                report_true = gr.Textbox(label="Radiologist report", lines=8)
 
             with gr.Column():
                 with gr.Tab("VQA"):
@@ -106,7 +115,6 @@ def make_app(pipe, examples, default_index=56):
                     report_indication = gr.Textbox(label="Indication (optional)")
                     report_button = gr.Button("Write findings", variant="primary")
                     report_text = gr.Textbox(label="Generated findings", lines=8)
-                    report_true = gr.Textbox(label="True findings (radiologist)", lines=6)
 
                 with gr.Tab("Anatomy localization"):
                     loc_object = gr.Textbox(label="Body part", value="right lung")
