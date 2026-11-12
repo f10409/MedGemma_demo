@@ -45,6 +45,12 @@ def download_openi(dest="data/OpenI-IU-CXR"):
         tgz = os.path.join(dest, name)
         print(f"⬇️  Downloading {name} ...")
         urllib.request.urlretrieve(f"{OPENI_URL}/{name}", tgz)
+        if not tarfile.is_tarfile(tgz):  # For example, NLM sends a web page when the site is down
+            os.remove(tgz)
+            raise RuntimeError(
+                f"NLM did not send the archive {name}. The Open-i site may be down for maintenance. "
+                "Open https://openi.nlm.nih.gov to check. Try again later."
+            )
         print(f"📦 Extracting {name} ...")
         with tarfile.open(tgz) as tar:
             tar.extractall(os.path.join(dest, sub), filter="data")
