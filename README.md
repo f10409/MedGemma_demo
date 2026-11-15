@@ -7,10 +7,12 @@ Chest X-ray visual question answering (VQA) and classification, radiology report
 | Notebook | What it does | Colab |
 |---|---|---|
 | `1_medgemma_demo.ipynb` | Data download, Hugging Face access, VQA and classification, report generation, anatomy localization, web app | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/f10409/MedGemma_demo/blob/main/1_medgemma_demo.ipynb) |
-| `2_medsiglip_demo.ipynb` | MedSigLIP image encoder with RadHarmony evaluators: zero-shot classification, linear probing, lung segmentation | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/f10409/MedGemma_demo/blob/main/2_medsiglip_demo.ipynb) |
+| `2_medsiglip_demo.ipynb` (bonus) | MedSigLIP image encoder with RadHarmony evaluators: zero-shot classification, linear probing, lung segmentation | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/f10409/MedGemma_demo/blob/main/2_medsiglip_demo.ipynb) |
+
+The session covers only notebook 1. Notebook 2 is a bonus that you can do after the session.
 
 ## Before the Session
-Complete **Step 2 in notebook 1** before the session. In this step, you accept the MedGemma 1.5 terms, make a Hugging Face token, and save it in Colab. Also accept the terms on the [MedSigLIP page](https://huggingface.co/google/medsiglip-448) for notebook 2.
+Complete **Step 2 in notebook 1** before the session. In this step, you accept the MedGemma 1.5 terms, make a Hugging Face token, and save it in Colab. For notebook 2 (bonus), also accept the terms on the [MedSigLIP page](https://huggingface.co/google/medsiglip-448).
 
 ## Usage (Google Colab)
 1. Open a notebook in Colab. Select **Runtime → Change runtime type → T4 GPU**.
