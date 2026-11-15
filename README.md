@@ -1,7 +1,7 @@
 # MedGemma Demo
 Chest X-ray visual question answering (VQA) and classification, radiology report generation, and anatomy localization with MedGemma 1.5 (`google/medgemma-1.5-4b-it`). Zero-shot classification, linear probing, and segmentation with MedSigLIP (`google/medsiglip-448`). MedGemma uses the image encoder of MedSigLIP.
 
-**Frank Li, Judy Gichoya, Mohammadreza Chavoshi** | HITI Lab, Emory University | RSNA 2026 Deep Learning Lab
+**Frank Li, Mohammadreza Chavoshi, Judy Gichoya** | HITI Lab, Emory University | RSNA 2026 Deep Learning Lab
 
 ## Notebooks
 | Notebook | What it does | Colab |
@@ -22,7 +22,12 @@ Both notebooks use the open-access [Open-i Indiana University chest X-ray collec
 
 Notebook 2 also uses the [Montgomery County chest X-ray set](https://data.lhncbc.nlm.nih.gov/public/Tuberculosis-Chest-X-ray-Datasets/Montgomery-County-CXR-Set/MontgomerySet/index.html) (138 images with lung masks) for segmentation. The notebook downloads it (about 0.6 GB) and loads it with RadHarmony (`MontgomeryCXRDataset`).
 
-Citations:
+## References
+Models: MedGemma and MedSigLIP from Google Health (code on GitHub: [MedGemma](https://github.com/Google-Health/medgemma), [MedSigLIP](https://github.com/Google-Health/medsiglip)).
+- Sellergren A, et al. An open vision-language model for diverse medical applications. *Nat Med*. 2026;32(10):3695–3704. [doi:10.1038/s41591-026-04626-w](https://doi.org/10.1038/s41591-026-04626-w). Preprint: MedGemma Technical Report, [arXiv:2507.05201](https://arxiv.org/abs/2507.05201).
+- Sellergren A, et al. MedGemma 1.5 Technical Report. *arXiv*. 2026. [arXiv:2604.05081](https://arxiv.org/abs/2604.05081).
+
+Data:
 - Demner-Fushman D, et al. Preparing a collection of radiology examinations for distribution and retrieval. *JAMIA*. 2016;23(2):304–310.
 - Jaeger S, et al. Two public chest X-ray datasets for computer-aided screening of pulmonary diseases. *Quant Imaging Med Surg*. 2014;4(6):475–477.
 - Candemir S, et al. Lung segmentation in chest radiographs using anatomical atlases with nonrigid registration. *IEEE Trans Med Imaging*. 2014;33(2):577–590.
