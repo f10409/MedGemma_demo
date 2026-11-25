@@ -20,7 +20,7 @@ Complete **Step 2 in notebook 1** before the session. In this step, you accept t
 3. Run the other cells. The setup cell installs [RadHarmony](https://github.com/f10409/RadHarmony) and checks your access. When Colab asks for access to the `HF_TOKEN` secret, click **Grant access**.
 
 ## Data
-Both notebooks use the open-access [Open-i Indiana University chest X-ray collection](https://openi.nlm.nih.gov/faq) (3,955 reports, 7,470 images). The notebooks download it (about 1.4 GB) and load it with RadHarmony (`OpenICXRHarmonizer`, `OpenICXRDataset`).
+Both notebooks use the open-access [Open-i Indiana University chest X-ray collection](https://openi.nlm.nih.gov/faq) (3,955 reports, 7,470 images). The notebooks download it (about 1.4 GB) and load it with RadHarmony (`OpenICXRHarmonizer`, `OpenICXRDataset`). If the NLM site is down, the notebooks download an unchanged copy of the same Open-i files from Google Drive. Open-i is shared under the [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/) license.
 
 Notebook 2 also uses the [Montgomery County chest X-ray set](https://data.lhncbc.nlm.nih.gov/public/Tuberculosis-Chest-X-ray-Datasets/Montgomery-County-CXR-Set/MontgomerySet/index.html) (138 images with lung masks) for segmentation. The notebook downloads it (about 0.6 GB) and loads it with RadHarmony (`MontgomeryCXRDataset`).
 
